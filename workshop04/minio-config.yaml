@@ -10,5 +10,5 @@ metadata:
 data:
   # admin
   MINIO_ROOT_USER: YWRtaW4=
-  # hello, world
-  MINIO_ROOT_PASSWORD: aGVsbG8sIHdvcmxk
+  # admin12345
+  MINIO_ROOT_PASSWORD: YWRtaW4xMjM0NQ==
