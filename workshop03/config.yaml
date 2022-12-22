@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: ConfigMap 
+metadata:
+  name: cs-cm
+  labels:
+    app: codeserver
+    name: cs-cm
+  namespace: cs
+data:
+  PUID: "1000"
+  PGID: "1000"
+  T2: Asia/Singapore
+  DEFAULT_WORKSPACE: /config/workspace
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cs-deploy
+  labels:
+    app: codeserver
+    name: cs-deploy
+  namespace: cs
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: codeserver
+      name: cs-po
+  template:
+    metadata:
+      name: cs-po
+      labels:
+        app: codeserver
+        name: cs-po
+    spec:
+      volumes:
+      - name: workspace-vol
+        persistentVolumeClaim:
+          claimName: cs-pvc
+      containers:
+      - name: cs-container
+        image: linuxserver/code-server:4.9.1
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: cs-cm
+        ports:
+        - containerPort: 8443
+        volumeMounts:
+        - name: workspace-vol
+          mountPath: /config/workspace
